@@ -1,30 +1,34 @@
+import { useSelector, useDispatch } from 'react-redux'
 import * as S from './styles'
-
-import { Produto } from '../../App'
 
 import cesta from '../../assets/cesta.png'
 import { paraReal } from '../Produto'
+import { RootState } from '../../store'
+import { abrirCarrinho } from '../../store/reducers/carrinho'
 
-type Props = {
-  itensNoCarrinho: Produto[]
-  favoritos: Produto[]
-}
+const Header = () => {
+  const dispatch = useDispatch()
+  const { items } = useSelector((state: RootState) => state.cart)
 
-const Header = ({ itensNoCarrinho, favoritos }: Props) => {
-  const valorTotal = itensNoCarrinho.reduce((acc, item) => {
+  const valorTotal = items.reduce((acc, item) => {
     acc += item.preco
     return acc
   }, 0)
+
+  const handleAbrirCarrinho = () => {
+    dispatch(abrirCarrinho())
+  }
 
   return (
     <S.Header>
       <h1>EBAC Sports</h1>
       <div>
-        <span>{favoritos.length} favoritos</span>
-        <img src={cesta} />
-        <span>
-          {itensNoCarrinho.length} itens, valor total: {paraReal(valorTotal)}
-        </span>
+        <div onClick={handleAbrirCarrinho} style={{ cursor: 'pointer' }}>
+          <img src={cesta} />
+          <span>
+            {items.length} itens, valor total: {paraReal(valorTotal)}
+          </span>
+        </div>
       </div>
     </S.Header>
   )
